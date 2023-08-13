@@ -9,7 +9,7 @@ import { randomUUID } from 'crypto';
 export class ArtistService {
   constructor(private readonly db: DataBase) {}
 
-  create({ name, grammy }: CreateArtistDto): Artist {
+  public create({ name, grammy }: CreateArtistDto): Artist {
     const artist = new Artist({ id: randomUUID(), name, grammy });
 
     this.db.artists.push(artist);
@@ -17,11 +17,11 @@ export class ArtistService {
     return artist;
   }
 
-  findAll(): Artist[] {
+  public findAll(): Artist[] {
     return this.db.artists;
   }
 
-  findOne(artistId: string): Artist {
+  public findOne(artistId: string): Artist {
     const artist = this.db.artists.find(({ id }: Artist) => id === artistId);
 
     if (!artist) {
@@ -31,7 +31,7 @@ export class ArtistService {
     return artist;
   }
 
-  update(artistId: string, { name, grammy }: UpdateArtistDto): Artist {
+  public update(artistId: string, { name, grammy }: UpdateArtistDto): Artist {
     const artist = this.db.artists.find(({ id }: Artist) => id === artistId);
 
     if (!artist) {
@@ -44,7 +44,7 @@ export class ArtistService {
     return artist;
   }
 
-  remove(artistId: string): void {
+  public remove(artistId: string): void {
     const artistIndex = this.db.artists.findIndex(
       ({ id }: Artist) => id === artistId,
     );
