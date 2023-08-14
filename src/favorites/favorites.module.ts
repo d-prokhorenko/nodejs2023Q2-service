@@ -5,15 +5,11 @@ import { DataBase } from 'src/db/db';
 import { AlbumService } from 'src/album/album.service';
 import { ArtistService } from 'src/artist/artist.service';
 import { TrackService } from 'src/track/track.service';
+import { DbModule } from 'src/db/db.module';
 
 @Module({
   controllers: [FavoritesController],
-  providers: [
-    FavoritesService,
-    DataBase,
-    ArtistService,
-    AlbumService,
-    TrackService,
-  ],
+  imports: [DbModule],
+  providers: [FavoritesService, ArtistService, AlbumService, TrackService],
 })
 export class FavoritesModule {}
