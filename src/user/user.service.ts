@@ -20,7 +20,7 @@ export class UserService {
       password,
       version: 1,
       createdAt: Date.now(),
-      updatedAt: null,
+      updatedAt: Date.now(),
     });
 
     this.db.users.push(user);

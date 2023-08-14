@@ -4,9 +4,9 @@ import { isUUID } from 'class-validator';
 @Injectable()
 export class ValidateIdParam implements PipeTransform<string> {
   transform(value: string): string {
-    const isNotUUIDId = !isUUID(value, 4);
+    const isUUIDId = isUUID(value, 4);
 
-    if (isNotUUIDId) {
+    if (!isUUIDId) {
       throw new BadRequestException();
     }
 
