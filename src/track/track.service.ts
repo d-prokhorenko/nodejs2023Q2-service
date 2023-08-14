@@ -2,8 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { DataBase } from 'src/db/db';
-import { Track } from './entities/track.entity';
 import { randomUUID } from 'crypto';
+import { Track } from './entities/track.entity';
 
 @Injectable()
 export class TrackService {
@@ -69,6 +69,38 @@ export class TrackService {
       throw new NotFoundException();
     }
 
+    this.removeTrackFromFavs(trackId);
+
     this.db.tracks.splice(trackIndex, 1);
+  }
+
+  public removeArtistFromTracks(artistId: string): void {
+    const tracksWithCurrentArtist = this.db.tracks.filter(
+      (track: Track) => track.artistId === artistId,
+    );
+
+    tracksWithCurrentArtist.forEach((track: Track) => {
+      track.artistId = null;
+    });
+  }
+
+  public removeAlbumFromTrack(albumId: string): void {
+    const tracksWithCurrentAlbum = this.db.tracks.filter(
+      (track: Track) => track.albumId === albumId,
+    );
+
+    tracksWithCurrentAlbum.forEach((track: Track) => {
+      track.albumId = null;
+    });
+  }
+
+  private removeTrackFromFavs(trackId: string): void {
+    const trackIdIndex = this.db.favorites.tracks.findIndex(
+      (id) => id === trackId,
+    );
+
+    if (trackIdIndex !== -1) {
+      this.db.favorites.tracks.splice(trackIdIndex, 1);
+    }
   }
 }

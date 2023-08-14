@@ -4,10 +4,16 @@ import { UpdateArtistDto } from './dto/update-artist.dto';
 import { DataBase } from 'src/db/db';
 import { Artist } from './entities/artist.entity';
 import { randomUUID } from 'crypto';
+import { TrackService } from 'src/track/track.service';
+import { AlbumService } from 'src/album/album.service';
 
 @Injectable()
 export class ArtistService {
-  constructor(private readonly db: DataBase) {}
+  constructor(
+    private readonly db: DataBase,
+    private readonly trackService: TrackService,
+    private readonly albumService: AlbumService,
+  ) {}
 
   public create({ name, grammy }: CreateArtistDto): Artist {
     const artist = new Artist({ id: randomUUID(), name, grammy });
@@ -53,6 +59,19 @@ export class ArtistService {
       throw new NotFoundException();
     }
 
+    this.removeArtistFromFavs(artistId);
+    this.trackService.removeArtistFromTracks(artistId);
+    this.albumService.removeArtistFromAlbums(artistId);
     this.db.artists.splice(artistIndex, 1);
+  }
+
+  private removeArtistFromFavs(artistId: string): void {
+    const artistIdIndex = this.db.favorites.artists.findIndex(
+      (id) => id === artistId,
+    );
+
+    if (artistIdIndex !== -1) {
+      this.db.favorites.artists.splice(artistIdIndex, 1);
+    }
   }
 }

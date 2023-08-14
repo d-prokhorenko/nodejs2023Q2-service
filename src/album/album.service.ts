@@ -4,10 +4,14 @@ import { UpdateAlbumDto } from './dto/update-album.dto';
 import { DataBase } from 'src/db/db';
 import { Album } from './entities/album.entity';
 import { randomUUID } from 'crypto';
+import { TrackService } from 'src/track/track.service';
 
 @Injectable()
 export class AlbumService {
-  constructor(private readonly db: DataBase) {}
+  constructor(
+    private readonly db: DataBase,
+    private readonly trackService: TrackService,
+  ) {}
 
   public create({ name, year, artistId }: CreateAlbumDto): Album {
     const album = new Album({ id: randomUUID(), name, year, artistId });
@@ -57,6 +61,28 @@ export class AlbumService {
       throw new NotFoundException();
     }
 
+    this.removeAlbumFormFavs(albumId);
+    this.trackService.removeAlbumFromTrack(albumId);
     this.db.albums.splice(albumIndex, 1);
+  }
+
+  public removeArtistFromAlbums(artisId: string): void {
+    const albumsWithCurrentArtist = this.db.albums.filter(
+      (album: Album) => album.artistId === artisId,
+    );
+
+    albumsWithCurrentArtist.forEach((album: Album) => {
+      album.artistId = null;
+    });
+  }
+
+  private removeAlbumFormFavs(albumId: string): void {
+    const albumIndex = this.db.favorites.albums.findIndex(
+      (id: string) => id === albumId,
+    );
+
+    if (albumIndex !== -1) {
+      this.db.favorites.albums.splice(albumIndex, 1);
+    }
   }
 }
