@@ -59,7 +59,7 @@ export class ArtistController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id') id: string): void {
+  remove(@Param('id', ValidateIdParam) id: string): void {
     return this.artistService.remove(id);
   }
 }

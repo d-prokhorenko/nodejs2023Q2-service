@@ -32,7 +32,7 @@ export class FavoritesService {
   }
 
   public addArtist(id: string) {
-    const artist = this.artistService.findOne(id);
+    const artist = this.getArtistById(id);
 
     if (artist) {
       this.db.favorites.artists.push(id);
@@ -42,7 +42,7 @@ export class FavoritesService {
   }
 
   public addAlbum(id: string) {
-    const album = this.albumService.findOne(id);
+    const album = this.getAlbumById(id);
 
     if (album) {
       this.db.favorites.albums.push(id);
@@ -52,7 +52,7 @@ export class FavoritesService {
   }
 
   public addTrack(id: string) {
-    const track = this.trackService.getTrack(id);
+    const track = this.getTrackById(id);
 
     if (track) {
       this.db.favorites.tracks.push(id);
@@ -94,6 +94,30 @@ export class FavoritesService {
       this.db.favorites.tracks.splice(trackIdIndex, 1);
     } else {
       throw new NotFoundException();
+    }
+  }
+
+  private getArtistById(id: string) {
+    try {
+      return this.artistService.findOne(id);
+    } catch {
+      return null;
+    }
+  }
+
+  private getAlbumById(id: string) {
+    try {
+      return this.albumService.findOne(id);
+    } catch {
+      return null;
+    }
+  }
+
+  private getTrackById(id: string) {
+    try {
+      return this.trackService.getTrack(id);
+    } catch {
+      return null;
     }
   }
 }

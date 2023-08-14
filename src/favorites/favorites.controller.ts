@@ -13,7 +13,7 @@ import { FavoritesService } from './favorites.service';
 import { ValidateIdParam } from 'src/validators/uuid.validator';
 import { StatusCodes } from 'http-status-codes';
 
-@Controller('favorites')
+@Controller('favs')
 export class FavoritesController {
   constructor(private readonly favoritesService: FavoritesService) {}
 

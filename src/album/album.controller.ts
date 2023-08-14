@@ -9,6 +9,8 @@ import {
   ClassSerializerInterceptor,
   Header,
   UseInterceptors,
+  HttpStatus,
+  HttpCode,
 } from '@nestjs/common';
 import { AlbumService } from './album.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
@@ -56,6 +58,7 @@ export class AlbumController {
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id', ValidateIdParam) id: string): void {
     return this.albumService.remove(id);
   }
