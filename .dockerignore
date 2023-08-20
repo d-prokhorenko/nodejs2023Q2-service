@@ -1,0 +1,9 @@
+node_modules
+dist
+npm-debug.log
+.dockerignore
+.git
+Dockerfile
+docker-compose.yml
+prisma/migrations
+test
